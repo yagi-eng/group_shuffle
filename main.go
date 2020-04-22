@@ -9,7 +9,7 @@ func main() {
 	allParticipants := 18
 	participantsInEachGroup := 6
 	repeatCnt := 3
-	trials := 50
+	trials := 1
 
 	if allParticipants%participantsInEachGroup != 0 {
 		fmt.Println("このプログラムは参加人数がグループ数で割り切れない場合に対応していません。")
@@ -17,22 +17,20 @@ func main() {
 		os.Exit(0)
 	}
 
-	p := NewParticipants(allParticipants)
+	pc := NewParticipantCombinations(allParticipants, repeatCnt)
 
 	for i := 0; i < trials; i++ {
 		sr := NewScoreRecord(allParticipants)
-		participantsTable := make([][]int, repeatCnt)
 
-		for i := 0; i < repeatCnt; i++ {
-			p.Shuffle()
-			sr.Record(p.arr, participantsInEachGroup)
+		for _, combination := range pc.combinations {
+			sr.Record(combination, participantsInEachGroup)
 		}
 
 		sd := sr.CalcStandardDeviation()
-		if sd < 1.5 {
+		if sd < 3 {
 			fmt.Println("各回の組み合わせ: ")
-			for _, row := range participantsTable {
-				fmt.Printf("%v\n", row)
+			for _, combination := range pc.combinations {
+				fmt.Printf("%v\n", combination)
 			}
 			sr.DisplayTable()
 			fmt.Println("標準偏差:", fmt.Sprintf("%.2f", sd))
