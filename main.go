@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 )
 
@@ -9,7 +10,7 @@ func main() {
 	allParticipants := 18
 	participantsInEachGroup := 6
 	repeatCnt := 3
-	trials := 1
+	trials := 10000
 
 	if allParticipants%participantsInEachGroup != 0 {
 		fmt.Println("このプログラムは参加人数がグループ数で割り切れない場合に対応していません。")
@@ -17,6 +18,9 @@ func main() {
 		os.Exit(0)
 	}
 
+	bettersd := math.MaxFloat64
+	var betterPc *ParticipantCombinations
+	var betterSr *ScoreRecord
 	for i := 0; i < trials; i++ {
 		pc := NewParticipantCombinations(allParticipants, repeatCnt)
 		sr := NewScoreRecord(allParticipants)
@@ -25,12 +29,17 @@ func main() {
 			sr.Record(combination, participantsInEachGroup)
 		}
 
-		sd := sr.CalcStandardDeviation()
-		if sd < 3 {
-			pc.Display()
-			sr.Display()
-			fmt.Println("標準偏差:", fmt.Sprintf("%.2f", sd))
-			fmt.Println()
+		tmpSd := sr.CalcStandardDeviation()
+
+		if tmpSd < bettersd {
+			bettersd = tmpSd
+			betterPc = pc
+			betterSr = sr
 		}
 	}
+
+	betterPc.Display()
+	betterSr.Display()
+	fmt.Println("標準偏差:", fmt.Sprintf("%.2f", bettersd))
+	fmt.Println()
 }
