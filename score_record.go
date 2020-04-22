@@ -95,7 +95,20 @@ func (sr *ScoreRecord) CalcStandardDeviation() float64 {
 
 // （デバッグ用）テーブルの中身を表示する
 func (sr *ScoreRecord) DisplayTable() {
+	countZero := 0
+	countThree := 0
 	for _, row := range sr.countTable {
 		fmt.Printf("%v\n", row)
+
+		for _, v := range row {
+			if v == 0 {
+				countZero++
+			} else if v == 3 {
+				countThree++
+			}
+		}
 	}
+
+	fmt.Println("0の数: ", countZero)
+	fmt.Println("3の数: ", countThree)
 }
