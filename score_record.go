@@ -60,18 +60,10 @@ func (sr *ScoreRecord) recordEachGroup(group []int) {
 			}
 
 			x, y := group[i], group[j]
-
-			// スコアを記録
-			// 自分自身の数字がスコアには反映されないため、
-			// 自分より大きい数字の人を記録する際は-1する
-			if x < y {
-				sr.scores[x] += y - 1
-			} else {
-				sr.scores[x] += y
-			}
-
 			// 同席回数を記録
 			sr.countTable[x][y]++
+			// スコアを記録
+			sr.scores[x] += sr.countTable[x][y]
 		}
 	}
 }
@@ -85,30 +77,27 @@ func (sr *ScoreRecord) CalcStandardDeviation() float64 {
 	len := len(sr.scores)
 	ave := float64(sum) / float64(len)
 
-	tmpSum := 0.0
+	numerator := 0.0
 	for _, v := range sr.scores {
-		tmpSum += math.Pow(float64(v)-ave, 2)
+		numerator += math.Pow(float64(v)-ave, 2)
 	}
-
-	return math.Sqrt(tmpSum / float64(len))
+	return math.Sqrt(numerator / float64(len))
 }
 
-// （デバッグ用）テーブルの中身を表示する
+// テーブルの中身と要素の内訳を表示する
 func (sr *ScoreRecord) DisplayTable() {
-	countZero := 0
-	countThree := 0
+	fmt.Println("同席回数をカウントしたテーブル: ")
+
+	cnt := make([]int, 4)
 	for _, row := range sr.countTable {
 		fmt.Printf("%v\n", row)
 
 		for _, v := range row {
-			if v == 0 {
-				countZero++
-			} else if v == 3 {
-				countThree++
-			}
+			cnt[v]++
 		}
 	}
 
-	fmt.Println("0の数: ", countZero)
-	fmt.Println("3の数: ", countThree)
+	for i, v := range cnt {
+		fmt.Printf("%dの数: %d\n", i, v)
+	}
 }
