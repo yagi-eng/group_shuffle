@@ -85,7 +85,7 @@ func (sr *ScoreRecord) CalcStandardDeviation() float64 {
 }
 
 // テーブルの中身と要素の内訳を表示する
-func (sr *ScoreRecord) DisplayTable() {
+func (sr *ScoreRecord) Display() {
 	fmt.Println("同席回数をカウントしたテーブル: ")
 
 	cnt := make([]int, 4)

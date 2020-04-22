@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 )
@@ -34,5 +35,13 @@ func shuffle(arr []int) {
 	for i := range arr {
 		j := rand.Intn(i + 1)
 		arr[i], arr[j] = arr[j], arr[i]
+	}
+}
+
+// 参加者の組み合わせを表示する
+func (pc *ParticipantCombinations) Display() {
+	fmt.Println("各回の組み合わせ: ")
+	for _, combination := range pc.combinations {
+		fmt.Printf("%v\n", combination)
 	}
 }

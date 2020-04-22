@@ -28,11 +28,8 @@ func main() {
 
 		sd := sr.CalcStandardDeviation()
 		if sd < 3 {
-			fmt.Println("各回の組み合わせ: ")
-			for _, combination := range pc.combinations {
-				fmt.Printf("%v\n", combination)
-			}
-			sr.DisplayTable()
+			pc.Display()
+			sr.Display()
 			fmt.Println("標準偏差:", fmt.Sprintf("%.2f", sd))
 			fmt.Println()
 		}
