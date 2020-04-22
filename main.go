@@ -17,9 +17,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	pc := NewParticipantCombinations(allParticipants, repeatCnt)
-
 	for i := 0; i < trials; i++ {
+		pc := NewParticipantCombinations(allParticipants, repeatCnt)
 		sr := NewScoreRecord(allParticipants)
 
 		for _, combination := range pc.combinations {
