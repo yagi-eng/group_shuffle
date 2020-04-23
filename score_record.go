@@ -5,10 +5,14 @@ import (
 	"math"
 )
 
-// 重複度を管理する型
+// スコアと同席回数を管理する型
 type ScoreRecord struct {
-	scores     []int
+	// 同席回数をカウントするテーブル(参加者数*参加者数)
+	// 例) countTable[3][6] = 2　⇒　参加者3と参加者6の同席回数は2
 	countTable [][]int
+	// スコア
+	// 参加者毎に各回で同席した人との同席回数を加算していった合計
+	scores []int
 }
 
 // コンストラクタ
@@ -27,28 +31,12 @@ func createTableFilledZero(len int) [][]int {
 	return table
 }
 
-// スコアと同席回数を記録する
+// 同席回数とスコアを記録する
 func (sr *ScoreRecord) Record(participants []int, participantsInEachGroup int) {
-	groups := sliceArr(participants, participantsInEachGroup)
-
+	groups := SliceArr(participants, participantsInEachGroup)
 	for _, group := range groups {
 		sr.recordEachGroup(group)
 	}
-}
-
-func sliceArr(participants []int, participantsInEachGroup int) [][]int {
-	groups := [][]int{}
-	len := len(participants)
-
-	for i := 0; i < len; i += participantsInEachGroup {
-		end := i + participantsInEachGroup
-		if len < end {
-			end = len
-		}
-		groups = append(groups, participants[i:end])
-	}
-
-	return groups
 }
 
 func (sr *ScoreRecord) recordEachGroup(group []int) {
@@ -68,11 +56,11 @@ func (sr *ScoreRecord) recordEachGroup(group []int) {
 	}
 }
 
-// 標準偏差を計算する
+// スコアの標準偏差を計算する
 func (sr *ScoreRecord) CalcStandardDeviation() float64 {
 	sum := 0
-	for _, v := range sr.scores {
-		sum += v
+	for _, score := range sr.scores {
+		sum += score
 	}
 	len := len(sr.scores)
 	ave := float64(sum) / float64(len)
@@ -85,10 +73,10 @@ func (sr *ScoreRecord) CalcStandardDeviation() float64 {
 }
 
 // テーブルの中身と要素の内訳を表示する
-func (sr *ScoreRecord) Display() {
+func (sr *ScoreRecord) Display(repeatCnt int) {
 	fmt.Println("同席回数をカウントしたテーブル: ")
 
-	cnt := make([]int, 4)
+	cnt := make([]int, repeatCnt+1)
 	for _, row := range sr.countTable {
 		fmt.Printf("%v\n", row)
 
